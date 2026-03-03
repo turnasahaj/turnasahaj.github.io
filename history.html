@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat History</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-[#231c0f] text-white p-6 min-h-screen">
+
+<!-- HEADER -->
+<div class="flex items-center justify-between mb-6">
+
+  <!-- Left empty space (balance ke liye) -->
+  <div class="w-10"></div>
+
+  <!-- Center Title -->
+  <h1 class="text-2xl font-bold text-yellow-400 text-center flex-1">
+    History
+  </h1>
+
+  <!-- Close Button -->
+  <button id="backBtn"
+    class="w-10 h-10 flex items-center justify-center
+           rounded-full bg-yellow-400 text-black
+           text-xl font-bold
+           shadow-lg hover:scale-105 transition">
+    ×
+  </button>
+
+</div>
+
+<div id="historyContainer" class="space-y-4"></div>
+
+<script type="module">
+import { supabase } from "./auth/supabase.js"
+
+const container = document.getElementById("historyContainer")
+
+try {
+
+  const { data: userData, error: userError } = await supabase.auth.getUser()
+
+  if (userError || !userData.user) {
+    window.location.href = "auth/login.html"
+    throw new Error("User not logged in")
+  }
+
+  const { data: sessions, error } = await supabase
+    .from("chat_sessions")
+    .select("*")
+    .eq("user_id", userData.user.id)
+    .order("created_at", { ascending: false })
+
+  if (error) {
+    container.innerHTML = "Error loading sessions"
+    throw error
+  }
+
+  if (!sessions || sessions.length === 0) {
+    container.innerHTML = "<p class='text-gray-400'>No chat history found</p>"
+  }
+
+  sessions.forEach(session => {
+
+    const card = document.createElement("div");
+
+card.setAttribute("data-id", session.id);
+
+card.className = `
+  bg-[#2b1b12]
+  p-4
+  rounded-xl
+  cursor-pointer
+  border border-yellow-500/20
+  hover:border-yellow-500
+`;
+
+    card.innerHTML = `
+      <h2 class="font-semibold">${session.title}</h2>
+      <p class="text-sm text-gray-400">
+        ${new Date(session.created_at).toLocaleString()}
+      </p>
+    `
+
+    let pressTimer;
+
+/* LONG PRESS START */
+card.addEventListener("touchstart", () => {
+  pressTimer = setTimeout(() => {
+    window.selectedSessionId = session.id; // important
+    const modal = document.getElementById("chatActionModal");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+  }, 600); // 600ms hold
+});
+
+/* CANCEL IF RELEASE EARLY */
+card.addEventListener("touchend", () => {
+  clearTimeout(pressTimer);
+});
+
+/* NORMAL CLICK (OPEN CHAT) */
+card.addEventListener("click", () => {
+  localStorage.setItem("activeSession", session.id);
+  window.location.href = "index.html";
+});
+
+container.appendChild(card);
+
+  })
+
+} catch (err) {
+  console.error("History page error:", err)
+  container.innerHTML = "<p class='text-red-400'>Something went wrong</p>"
+}
+</script>
+<script>
+document.getElementById("backBtn").addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+</script>
+<!-- LONG PRESS POPUP -->
+<div id="chatActionModal"
+     class="fixed inset-0 hidden items-center justify-center bg-black/60 z-50">
+
+  <div class="bg-[#2b1b12] p-6 rounded-2xl w-72 space-y-4 border border-yellow-500/30">
+
+    <h2 class="text-lg font-semibold text-yellow-400 text-center">
+      Chat Options
+    </h2>
+
+    <button id="saveChatBtn"
+      class="w-full py-2 rounded-lg bg-yellow-500 text-black font-semibold hover:scale-105 transition">
+      Save Chat
+    </button>
+
+    <button id="deleteChatBtn"
+      class="w-full py-2 rounded-lg bg-red-600 text-white font-semibold hover:scale-105 transition">
+      Delete Chat
+    </button>
+
+    <button id="closeModalBtn"
+      class="w-full py-2 rounded-lg bg-gray-700 text-white">
+      Cancel
+    </button>
+
+  </div>
+</div>
+<script type="module">
+import { supabase } from "./auth/supabase.js"
+
+const modal = document.getElementById("chatActionModal");
+const deleteBtn = document.getElementById("deleteChatBtn");
+const closeBtn = document.getElementById("closeModalBtn");
+
+/* Close Modal */
+closeBtn.addEventListener("click", () => {
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+});
+
+/* Delete Chat */
+deleteBtn.addEventListener("click", async () => {
+
+  if (!window.selectedSessionId) {
+    alert("No session selected");
+    return;
+  }
+
+  const sessionId = window.selectedSessionId;
+
+  // Delete messages
+  const { error: msgError } = await supabase
+    .from("chat_messages")
+    .delete()
+    .eq("session_id", sessionId);
+
+  if (msgError) {
+    console.error("Message delete error:", msgError);
+    alert("Delete failed (messages)");
+    return;
+  }
+
+  // Delete session
+  const { error: sessionError } = await supabase
+    .from("chat_sessions")
+    .delete()
+    .eq("id", sessionId);
+
+  if (sessionError) {
+    console.error("Session delete error:", sessionError);
+    alert("Delete failed (session)");
+    return;
+  }
+
+  // Remove card from UI
+  const cardToRemove = document.querySelector(
+    `[data-id="${sessionId}"]`
+  );
+
+  if (cardToRemove) {
+    cardToRemove.remove();
+  }
+
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+
+  window.selectedSessionId = null;
+});
+</script>
+</body>
+</html>

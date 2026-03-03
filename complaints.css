@@ -1,0 +1,107 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:linear-gradient(to bottom,#0f0f0f,#000);
+    color:white;
+    min-height:100vh;
+}
+
+/* TOPBAR */
+.topbar{
+    height:60px;
+    background:linear-gradient(90deg,#7a5cff,#d48cff);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 15px;
+    font-weight:bold;
+}
+
+/* TABS */
+.tabs{
+    display:flex;
+    gap:10px;
+    padding:15px;
+    justify-content:center;
+}
+
+.tabs button{
+    padding:8px 15px;
+    border:none;
+    border-radius:20px;
+    background:#1a1a1a;
+    color:white;
+    cursor:pointer;
+}
+
+.tabs .active{
+    background:#4a00e0;
+}
+
+/* COMPLAINT CARDS */
+.complaint-container{
+    padding:15px;
+}
+
+.card{
+    background:#1a1a1a;
+    padding:15px;
+    border-radius:15px;
+    margin-bottom:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.6);
+}
+
+.card-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.status{
+    padding:5px 10px;
+    border-radius:15px;
+    font-size:12px;
+}
+
+.new{ background:#7a5cff; }
+.progress{ background:#ff9800; }
+.resolved{ background:#4caf50; }
+
+.tag{
+    display:inline-block;
+    background:#333;
+    padding:5px 10px;
+    border-radius:12px;
+    font-size:12px;
+    margin:8px 0;
+}
+
+.actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:10px;
+}
+
+.actions button{
+    padding:6px 12px;
+    border:none;
+    border-radius:15px;
+    cursor:pointer;
+    font-size:12px;
+}
+
+.assign{
+    background:#333;
+    color:white;
+}
+
+.view{
+    background:#4a00e0;
+    color:white;
+}

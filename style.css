@@ -1,0 +1,53 @@
+/* Body Height Fix */
+body {
+    min-height: max(884px, 100dvh);
+}
+
+/* Wood Texture */
+.wood-texture {
+    background-color: #2b1b12;
+    background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA9W0AXBh5sVxl_vwaFT6uGMKr4J9d9B__yHCcLRslQxh9GAHWGsDEj7oIKOdBBlppo5aw8wYpVMP2UlEtWhNeauPlS4wjGHYLC-Q4tj0Gwm7GiY1nta0M87CD4wcZ4J9Bady8JTU3hJiz6FyGDWMhVZDZIqfWykA1kwtl7gNR6rKe4P3t0vSHvR8cPxcUlDGZhjH4JMayZcwX1yfZrkzq5ZnhMEdd8goZZotU7woEBcSeq506noBNqrN4-Y-Xqfb-xhs2WbymIAHZu");
+    background-blend-mode: overlay;
+}
+
+/* Gold Glow */
+.gold-glow {
+    box-shadow: 0 0 15px rgba(255, 166, 0, 0.4);
+}
+
+/* Gold Underglow */
+.gold-underglow {
+    box-shadow: 0 10px 40px -10px rgba(255, 166, 0, 0.3);
+}
+
+/* Glass Panel */
+.glass-panel {
+    backdrop-filter: blur(12px);
+    background: rgba(43, 27, 18, 0.7);
+    border: 1px solid rgba(255, 166, 0, 0.1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.attach-option {
+    background: #2b1b12;
+    border: 1px solid rgba(255,166,0,0.2);
+    color: #ffa600;
+    padding: 12px;
+    border-radius: 16px;
+    transition: 0.3s;
+    text-align: left;
+    font-weight: 500;
+}
+
+.attach-option:hover {
+    background: #ffa600;
+    color: #1f1209;
+}

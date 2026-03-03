@@ -1,0 +1,70 @@
+/* ========================= */
+/* AUTH SIZE CONTROL PANEL */
+/* ========================= */
+
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* 🔥 YAHAN SE SIZE CONTROL KARO */
+.auth-box {
+    width: 95%;          /* width control */
+    max-width: 600px;    /* desktop max width */
+    padding: 40px;       /* box padding */
+    border-radius: 28px; /* roundness */
+    background: linear-gradient(145deg,#2b1b12,#1f1209);
+    box-shadow: 0 0 60px rgba(255,166,0,0.25);
+    border: 1px solid rgba(255,200,0,0.2);
+}
+
+/* TITLE */
+.auth-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #facc15;
+    margin-bottom: 30px;
+}
+
+/* INPUTS */
+.auth-input {
+    width: 100%;
+    padding: 16px;
+    margin-bottom: 20px;
+    border-radius: 18px;
+    background: #2a1b12;
+    border: 1px solid rgba(255,200,0,0.3);
+    color: white;
+    font-size: 16px;
+}
+
+/* BUTTON */
+.auth-btn {
+    width: 100%;
+    padding: 18px;
+    border-radius: 40px;
+    border: none;
+    font-size: 18px;
+    font-weight: 600;
+    background: linear-gradient(to right,#facc15,#fde047);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.auth-btn:hover {
+    transform: scale(1.03);
+}
+
+/* LINK */
+.auth-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #9ca3af;
+}
+.auth-link a {
+    color: #facc15;
+}

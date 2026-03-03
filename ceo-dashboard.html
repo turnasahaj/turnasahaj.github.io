@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEO Dashboard</title>
+<link rel="stylesheet" href="ceo-dashboard.css">
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <div class="menu-icon">☰</div>
+    <div class="title">CEO Dashboard</div>
+    <div class="notify">🔔</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="dashboard">
+
+    <!-- STATS CARDS -->
+    <div class="stats-row">
+        <div class="card">
+            <h3>Total Users</h3>
+            <h1>142.8k</h1>
+            <span class="green">▲ 8%</span>
+        </div>
+
+        <div class="card">
+            <h3>Daily Active</h3>
+            <h1>12,402</h1>
+            <span class="green">▲ 12%</span>
+        </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-box">
+        <input type="text" placeholder="Search user by email or ID...">
+    </div>
+
+    <!-- PRIMARY ACTIONS -->
+    <h2 class="section-title">PRIMARY ACTIONS</h2>
+
+    <div class="action-card" onclick="openComplaints()">
+        <div class="icon orange">⚠</div>
+        <div class="info">
+            <h3>User Complaints <span class="badge">12 NEW</span></h3>
+            <p>Review and resolve escalated tickets</p>
+        </div>
+    </div>
+
+    <div class="action-card">
+        <div class="icon blue">💬</div>
+        <div class="info">
+            <h3>Contact User</h3>
+            <p>Direct outreach to active accounts</p>
+        </div>
+    </div>
+
+    <div class="action-card">
+        <div class="icon gray">👥</div>
+        <div class="info">
+            <h3>All Users</h3>
+            <p>Manage the complete user database</p>
+        </div>
+    </div>
+
+    <!-- AI HEALTH -->
+    <div class="ai-health">
+        <h3>AI MODEL HEALTH</h3>
+        <h1>Systems Optimal</h1>
+        <p>Latency is currently at 120ms with 99.9% uptime.</p>
+        <button>View Logs</button>
+    </div>
+
+</div>
+
+<script src="ceo-dashboard.js"></script>
+</body>
+</html>

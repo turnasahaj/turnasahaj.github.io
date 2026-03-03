@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html class="dark">
+<head>
+<link rel="stylesheet" href="auth.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Turna AI</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-[#231c0f] font-['Space_Grotesk']">
+
+<div class="auth-wrapper">
+<div class="auth-box">
+
+<h1 class="auth-title">Welcome Back</h1>
+
+<input id="email" type="email" placeholder="Email" class="auth-input">
+<input id="password" type="password" placeholder="Password" class="auth-input">
+
+<!-- ✅ Sirf Ek Button -->
+<button class="auth-btn" onclick="loginUser()">
+Login
+</button>
+
+<p class="auth-link">
+No account? <a href="register.html">Register</a>
+</p>
+
+</div>
+</div>
+
+<script type="module" src="auth.js"></script>
+</body>
+</html>

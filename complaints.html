@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Complaints</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet" href="complaints.css">
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+    <div class="back" onclick="goBack()">←</div>
+    <div class="title">User Complaints</div>
+    <div class="menu">⋮</div>
+</div>
+
+<!-- FILTER TABS -->
+<div class="tabs">
+    <button class="active">All</button>
+    <button>New</button>
+    <button>In Progress</button>
+    <button>Resolved</button>
+</div>
+
+<!-- COMPLAINT LIST -->
+<div id="complaintContainer" class="complaint-container"></div>
+
+<script src="complaints.js"></script>
+</body>
+</html>

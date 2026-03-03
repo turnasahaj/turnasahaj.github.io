@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Turna AI - Luxury Assistant</title>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+<link rel="stylesheet" href="css/style.css"/>
+
+<script>
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                primary: "#ffa600",
+                "background-dark": "#231c0f"
+            },
+            fontFamily: {
+                display: ["Space Grotesk", "sans-serif"]
+            }
+        }
+    }
+}
+</script>
+</head>
+
+<body class="bg-background-dark font-display text-slate-100 wood-texture min-h-screen flex flex-col">
+
+<script type="module">
+import { supabase } from "./auth/supabase.js"
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    const { data: { session } } = await supabase.auth.getSession()
+
+    if (!session) {
+        window.location.href = "auth/login.html"
+        return
+    }
+
+})
+</script>
+
+<!-- ================= HEADER ================= -->
+<header class="sticky top-0 z-40 flex items-center justify-between px-6 py-4 bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+
+    <button id="menuBtn"
+        class="w-12 h-12 flex items-center justify-center rounded-full bg-primary/10 text-primary gold-glow border border-primary/20">
+        <span class="material-symbols-outlined">menu</span>
+    </button>
+
+    <h1 class="text-xl font-bold tracking-widest uppercase text-primary">Turna AI</h1>
+
+    <!-- ================= HOME PROFILE ================= -->
+<div class="relative">
+
+    <!-- Hidden Input -->
+    <input type="file" id="homeProfileInput" accept="image/*" hidden>
+
+    <!-- Profile Image -->
+    <img id="homeProfileImage"
+         src="assets/ai.png"
+         class="w-12 h-12 rounded-full object-cover
+                border-2 border-primary/30
+                shadow-[0_0_15px_rgba(255,166,0,0.6)]
+                cursor-pointer">
+
+    <!-- Delete Button -->
+    <button id="homeDeleteProfileBtn"
+            class="absolute -bottom-1 -right-1
+                   bg-red-600 text-white text-[10px]
+                   w-5 h-5 rounded-full
+                   flex items-center justify-center
+                   hidden">
+        ✕
+    </button>
+
+</div>
+</header>
+
+<!-- ================= SIDEBAR ================= -->
+<div id="drawerOverlay" class="fixed inset-0 z-50 hidden">
+
+    <!-- Backdrop -->
+    <div id="drawerBackdrop"
+        class="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+    </div>
+
+    <!-- Drawer -->
+<div id="drawer"
+class="fixed left-0 top-0 z-[1000]
+w-4/5 max-w-md h-screen
+bg-gradient-to-b from-[#2b1b12] via-[#2a160c] to-[#1f1209]
+flex flex-col px-8 pt-10 pb-8
+rounded-r-[36px]
+shadow-2xl
+transform -translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto">
+
+<!-- Neon Right Border -->
+<div class="absolute right-0 top-0 h-full w-[3px]
+bg-cyan-400 shadow-[0_0_20px_#00f2ff] rounded-full"></div>
+
+<!-- ================= PROFILE SECTION ================= -->
+<div class="flex flex-col items-center mb-12">
+
+    <!-- Hidden File Input -->
+    <input type="file" id="profileInput" accept="image/*" hidden>
+
+    <div class="relative">
+
+        <!-- Profile Image -->
+        <img id="profileImage"
+             src="assets/default-profile.png"
+             class="w-24 h-24 rounded-full object-cover
+                    border-2 border-primary
+                    shadow-[0_0_25px_rgba(255,166,0,0.6)]
+                    cursor-pointer">
+
+        <!-- Delete Button -->
+        <button id="deleteProfileBtn"
+                class="absolute -bottom-2 -right-2
+                       bg-red-600 text-white text-xs
+                       w-7 h-7 rounded-full
+                       flex items-center justify-center
+                       shadow-md hidden">
+            ✕
+        </button>
+
+    </div>
+
+    <h2 id="sidebarUsername" class="text-2xl font-semibold tracking-tight mt-4">
+    Loading...
+</h2>
+
+    <p class="text-primary text-sm tracking-[0.3em] mt-1 uppercase">
+        Elite Member
+    </p>
+
+</div>
+
+<!-- Menu Items -->
+<nav class="space-y-6 flex-1">
+
+    <!-- NEW CHAT -->
+<div id="newChatBtn" class="flex items-center gap-5 group cursor-pointer">
+    <div class="w-14 h-14 rounded-full flex items-center justify-center
+    bg-primary/10 border border-primary/30
+    shadow-[0_0_20px_rgba(255,166,0,0.5)]
+    group-hover:bg-primary transition-all duration-300">
+
+        <span class="material-symbols-outlined text-primary group-hover:text-background-dark transition">
+            add
+        </span>
+
+    </div>
+    <span class="text-lg text-slate-200 font-medium">New Chat</span>
+</div>
+
+<div class="h-px bg-white/10"></div>
+
+<!-- HISTORY -->
+<div id="historyBtn" class="flex items-center gap-5 group cursor-pointer">
+    <div class="w-14 h-14 rounded-full flex items-center justify-center
+    bg-primary/10 border border-primary/30
+    shadow-[0_0_20px_rgba(255,166,0,0.5)]
+    group-hover:bg-primary transition-all duration-300">
+
+        <span class="material-symbols-outlined text-primary group-hover:text-background-dark">
+            history
+        </span>
+
+    </div>
+    <span class="text-lg text-slate-200 font-medium">History</span>
+</div>
+
+    <div class="h-px bg-white/10"></div>
+
+ 
+    <!-- SAVED CHATS -->
+    <div class="flex items-center gap-5 group cursor-pointer">
+        <div class="w-14 h-14 rounded-full flex items-center justify-center
+        bg-primary/10 border border-primary/30
+        shadow-[0_0_20px_rgba(255,166,0,0.5)]
+        group-hover:bg-primary transition-all duration-300">
+
+            <span class="material-symbols-outlined text-primary group-hover:text-background-dark">
+                bookmark
+            </span>
+
+        </div>
+        <span class="text-lg text-slate-200 font-medium">Saved Chats</span>
+    </div>
+
+    <div class="h-px bg-white/10"></div>
+
+    <!-- SETTINGS -->
+    <div class="flex items-center gap-5 group cursor-pointer">
+        <div class="w-14 h-14 rounded-full flex items-center justify-center
+        bg-primary/10 border border-primary/30
+        shadow-[0_0_20px_rgba(255,166,0,0.5)]
+        group-hover:bg-primary transition-all duration-300">
+
+            <span class="material-symbols-outlined text-primary group-hover:text-background-dark">
+                settings
+            </span>
+
+        </div>
+        <span class="text-lg text-slate-200 font-medium">Settings</span>
+    </div>
+
+    <div class="h-px bg-white/10"></div>
+
+    <!-- HELP CENTER -->
+    <div onclick="openHelp()" class="flex items-center gap-5 group cursor-pointer">
+
+        <div class="w-14 h-14 rounded-full flex items-center justify-center
+        bg-primary/10 border border-primary/30
+        shadow-[0_0_20px_rgba(255,166,0,0.5)]
+        group-hover:bg-primary transition-all duration-300">
+
+            <span class="material-symbols-outlined text-primary group-hover:text-background-dark">
+                help_outline
+            </span>
+
+        </div>
+
+        <span class="text-lg text-slate-200 font-medium">
+            Help Center
+        </span>
+
+    </div>
+
+</nav>
+
+<!-- Sign Out -->
+<div class="mt-auto pt-10">
+    <button id="logoutBtn" 
+class="w-full h-16 rounded-full
+bg-gradient-to-r from-[#ffa600] to-[#ffcc66]
+text-black font-bold text-lg tracking-wide
+shadow-[0_0_35px_rgba(255,166,0,0.7)]
+hover:scale-[1.02] active:scale-[0.98]
+transition-all duration-300">
+
+        <div class="flex items-center justify-center gap-3">
+            <span class="material-symbols-outlined">logout</span>
+            SIGN OUT
+        </div>
+
+    </button>
+</div>
+
+</div> <!-- ✅ drawer closes HERE -->
+</div> <!-- ✅ drawerOverlay closes HERE -->
+<!-- ================= CHAT AREA ================= -->
+<main id="chat-container"
+class="flex-1 overflow-y-auto px-4 py-8 pb-32 space-y-6 max-w-4xl mx-auto w-full">
+</main>
+
+<!-- ================= INPUT AREA ================= -->
+<div class="fixed bottom-0 left-0 right-0 z-20 p-4 bg-transparent">
+    <div class="glass-panel rounded-full p-2 flex items-center gap-2 gold-underglow">
+
+<button id="attachBtn"
+class="w-10 h-10 flex items-center justify-center rounded-full text-primary/60 hover:text-primary transition">
+    <span class="material-symbols-outlined">add_circle</span>
+</button>
+
+        <input id="messageInput"
+            class="flex-1 bg-transparent border-none focus:ring-0 text-slate-100 placeholder:text-primary/30 py-2 px-2"
+            placeholder="Type your message..." type="text"/>
+
+        <button id="sendBtn"
+            class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-background-dark font-bold gold-glow">
+            <span class="material-symbols-outlined">send</span>
+        </button>
+    </div>
+</div>
+
+<!-- ================= ATTACH POPUP ================= -->
+<div id="attachPopup"
+class="fixed bottom-24 left-4 w-60
+bg-gradient-to-br from-[#2b1b12] to-[#1f1209]
+border border-primary/20
+rounded-2xl shadow-2xl p-4
+hidden flex flex-col gap-3 z-50">
+
+    <button id="cameraBtn" class="attach-option">📷 Camera</button>
+    <button id="photoBtn" class="attach-option">🖼 Photos</button>
+    <button id="fileBtn" class="attach-option">📁 Files</button>
+
+</div>
+
+<!-- Hidden Inputs -->
+<input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
+<input type="file" id="photoInput" accept="image/*" hidden>
+<input type="file" id="fileInput" hidden>
+
+<!-- ================= SIDEBAR SCRIPT ================= -->
+<script>
+const menuBtn = document.getElementById("menuBtn");
+const drawerOverlay = document.getElementById("drawerOverlay");
+const drawer = document.getElementById("drawer");
+const drawerBackdrop = document.getElementById("drawerBackdrop");
+
+function openDrawer() {
+    drawerOverlay.classList.remove("hidden");
+    setTimeout(() => {
+        drawer.classList.remove("-translate-x-full");
+        drawerBackdrop.classList.remove("opacity-0");
+    }, 10);
+}
+
+function closeDrawer() {
+    drawer.classList.add("-translate-x-full");
+    drawerBackdrop.classList.add("opacity-0");
+    setTimeout(() => {
+        drawerOverlay.classList.add("hidden");
+    }, 300);
+}
+
+menuBtn.addEventListener("click", openDrawer);
+drawerBackdrop.addEventListener("click", closeDrawer);
+</script>
+
+<script>
+const profileImage = document.getElementById("profileImage");
+const profileInput = document.getElementById("profileInput");
+const deleteProfileBtn = document.getElementById("deleteProfileBtn");
+
+const defaultImage = "assets/default-profile.png";
+
+// Load saved image
+const savedImage = localStorage.getItem("userProfileImage");
+
+if (savedImage) {
+    profileImage.src = savedImage;
+    deleteProfileBtn.classList.remove("hidden");
+}
+
+// Click image to upload
+profileImage.addEventListener("click", () => {
+    profileInput.click();
+});
+
+// When new image selected
+profileInput.addEventListener("change", function () {
+
+    const file = this.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        profileImage.src = e.target.result;
+        localStorage.setItem("userProfileImage", e.target.result);
+        deleteProfileBtn.classList.remove("hidden");
+    };
+
+    reader.readAsDataURL(file);
+});
+
+// Delete profile
+deleteProfileBtn.addEventListener("click", () => {
+    localStorage.removeItem("userProfileImage");
+    profileImage.src = defaultImage;
+    deleteProfileBtn.classList.add("hidden");
+});
+</script>
+
+<!-- ================= GOLDEN HELP MODAL ================= -->
+<div id="helpModal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.75);
+backdrop-filter: blur(8px);
+justify-content:center;
+align-items:center;
+z-index:999;
+">
+
+<div style="
+background:linear-gradient(145deg,#1f1409,#2a1b0f);
+padding:30px;
+width:90%;
+max-width:420px;
+border-radius:24px;
+border:1px solid rgba(255,166,0,0.3);
+box-shadow:0 0 40px rgba(255,166,0,0.25);
+">
+
+<h2 style="
+color:#ffa600;
+margin-bottom:20px;
+font-size:22px;
+font-weight:600;
+letter-spacing:1px;
+">
+Help Center
+</h2>
+
+<input id="helpName" type="text" placeholder="Username"
+style="
+width:100%;
+padding:14px;
+margin-bottom:14px;
+border-radius:14px;
+border:1px solid rgba(255,166,0,0.3);
+background:#2b1b12;
+color:#ffffff;
+outline:none;
+">
+
+<input id="helpEmail" type="email" placeholder="Email"
+style="
+width:100%;
+padding:14px;
+margin-bottom:14px;
+border-radius:14px;
+border:1px solid rgba(255,166,0,0.3);
+background:#2b1b12;
+color:#ffffff;
+outline:none;
+">
+
+<textarea id="helpMessage" placeholder="Write your complaint..."
+style="
+width:100%;
+padding:14px;
+margin-bottom:18px;
+border-radius:14px;
+border:1px solid rgba(255,166,0,0.3);
+background:#2b1b12;
+color:#ffffff;
+outline:none;
+resize:none;
+height:100px;
+"></textarea>
+
+<button onclick="sendComplaint()" style="
+width:100%;
+padding:14px;
+background:linear-gradient(90deg,#ffa600,#ffcc66);
+color:#1a1a1a;
+font-weight:600;
+border:none;
+border-radius:50px;
+cursor:pointer;
+box-shadow:0 0 25px rgba(255,166,0,0.5);
+transition:0.3s;
+">
+Send
+</button>
+
+<button onclick="closeHelp()" style="
+margin-top:12px;
+width:100%;
+padding:12px;
+background:#2b1b12;
+color:#ffa600;
+border:1px solid rgba(255,166,0,0.3);
+border-radius:50px;
+cursor:pointer;
+transition:0.3s;
+">
+Cancel
+</button>
+
+</div>
+</div>
+
+<script>
+function openHelp(){
+    document.getElementById("helpModal").style.display = "flex";
+}
+
+function closeHelp(){
+    document.getElementById("helpModal").style.display = "none";
+}
+
+function sendComplaint(){
+
+    const name = document.getElementById("helpName").value.trim();
+    const email = document.getElementById("helpEmail").value.trim();
+    const message = document.getElementById("helpMessage").value.trim();
+
+    if(!name || !email || !message){
+        alert("Please fill all fields");
+        return;
+    }
+
+    let complaints = JSON.parse(localStorage.getItem("complaints")) || [];
+
+    const newComplaint = {
+        id: Date.now(),
+        username: name,
+        email: email,
+        message: message,
+        status: "new",
+        date: new Date().toLocaleString()
+    };
+
+    complaints.unshift(newComplaint);
+
+    localStorage.setItem("complaints", JSON.stringify(complaints));
+
+    alert("Complaint Sent Successfully!");
+
+    document.getElementById("helpName").value = "";
+    document.getElementById("helpEmail").value = "";
+    document.getElementById("helpMessage").value = "";
+
+    closeHelp();
+}
+</script>
+
+<script>
+const defaultImage = "assets/default-profile.png";
+
+// Sidebar Elements
+const profileImage = document.getElementById("profileImage");
+const profileInput = document.getElementById("profileInput");
+const deleteProfileBtn = document.getElementById("deleteProfileBtn");
+
+// Home Elements
+const homeProfileImage = document.getElementById("homeProfileImage");
+const homeProfileInput = document.getElementById("homeProfileInput");
+const homeDeleteBtn = document.getElementById("homeDeleteProfileBtn");
+
+// Load Saved Image
+const savedImage = localStorage.getItem("userProfileImage");
+
+if (savedImage) {
+    profileImage.src = savedImage;
+    homeProfileImage.src = savedImage;
+    deleteProfileBtn.classList.remove("hidden");
+    homeDeleteBtn.classList.remove("hidden");
+}
+
+// Upload From Sidebar
+profileImage.addEventListener("click", () => profileInput.click());
+
+profileInput.addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        localStorage.setItem("userProfileImage", e.target.result);
+        profileImage.src = e.target.result;
+        homeProfileImage.src = e.target.result;
+        deleteProfileBtn.classList.remove("hidden");
+        homeDeleteBtn.classList.remove("hidden");
+    };
+
+    reader.readAsDataURL(file);
+});
+
+// Upload From Home
+homeProfileImage.addEventListener("click", () => homeProfileInput.click());
+
+homeProfileInput.addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        localStorage.setItem("userProfileImage", e.target.result);
+        profileImage.src = e.target.result;
+        homeProfileImage.src = e.target.result;
+        deleteProfileBtn.classList.remove("hidden");
+        homeDeleteBtn.classList.remove("hidden");
+    };
+
+    reader.readAsDataURL(file);
+});
+
+// Delete Function
+function resetProfile() {
+    localStorage.removeItem("userProfileImage");
+    profileImage.src = defaultImage;
+    homeProfileImage.src = defaultImage;
+    deleteProfileBtn.classList.add("hidden");
+    homeDeleteBtn.classList.add("hidden");
+}
+
+deleteProfileBtn.addEventListener("click", resetProfile);
+homeDeleteBtn.addEventListener("click", resetProfile);
+</script>
+
+<script type="module">
+import { supabase } from "./auth/supabase.js"
+
+const logoutBtn = document.getElementById("logoutBtn")
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async () => {
+
+    const { error } = await supabase.auth.signOut()
+
+    if (error) {
+      alert(error.message)
+    } else {
+      window.location.href = "auth/login.html"
+    }
+
+  })
+}
+</script>
+<!-- YAHAN TAK TUMHARA PAGE CONTENT -->
+
+<script type="module">
+import { supabase } from "./auth/supabase.js"
+
+const { data } = await supabase.auth.getUser()
+
+if (!data.user) {
+  window.location.href = "auth/login.html"
+} else {
+  document.getElementById("sidebarUsername").innerText =
+    data.user.user_metadata.username
+}
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+const historyBtn = document.getElementById("historyBtn");
+
+if (historyBtn) {
+    historyBtn.addEventListener("click", () => {
+        window.location.href = "history.html";
+    });
+}
+
+const chatContainer = document.getElementById("chat-container");
+
+const attachBtn = document.getElementById("attachBtn");
+const attachPopup = document.getElementById("attachPopup");
+
+const cameraBtn = document.getElementById("cameraBtn");
+const photoBtn = document.getElementById("photoBtn");
+const fileBtn = document.getElementById("fileBtn");
+
+const cameraInput = document.getElementById("cameraInput");
+const photoInput = document.getElementById("photoInput");
+const fileInput = document.getElementById("fileInput");
+
+/* Toggle Popup */
+if (attachBtn) {
+    attachBtn.addEventListener("click", () => {
+        attachPopup.classList.toggle("hidden");
+    });
+}
+
+/* Camera */
+if (cameraBtn) {
+    cameraBtn.addEventListener("click", () => {
+        cameraInput.click();
+        attachPopup.classList.add("hidden");
+    });
+}
+
+/* Photos */
+if (photoBtn) {
+    photoBtn.addEventListener("click", () => {
+        photoInput.click();
+        attachPopup.classList.add("hidden");
+    });
+}
+
+/* Files */
+if (fileBtn) {
+    fileBtn.addEventListener("click", () => {
+        fileInput.click();
+        attachPopup.classList.add("hidden");
+    });
+}
+
+/* Preview */
+function previewFile(file) {
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "flex justify-end";
+
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        img.className = "max-w-[200px] rounded-xl shadow-lg";
+
+        wrapper.appendChild(img);
+        chatContainer.appendChild(wrapper);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        setTimeout(() => {
+
+            const aiWrapper = document.createElement("div");
+            aiWrapper.className = "flex justify-start";
+
+            const bubble = document.createElement("div");
+            bubble.className =
+                "bg-[#2b1b12] border border-primary/20 text-slate-100 rounded-2xl rounded-bl-none px-5 py-3 shadow-lg";
+
+            bubble.innerText =
+                "I received your image. Image analysis feature will be added soon.";
+
+            aiWrapper.appendChild(bubble);
+            chatContainer.appendChild(aiWrapper);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        }, 800);
+    };
+
+    reader.readAsDataURL(file);
+}
+
+if (cameraInput) {
+    cameraInput.addEventListener("change", e => previewFile(e.target.files[0]));
+}
+
+if (photoInput) {
+    photoInput.addEventListener("change", e => previewFile(e.target.files[0]));
+}
+
+if (fileInput) {
+    fileInput.addEventListener("change", e => previewFile(e.target.files[0]));
+}
+
+});
+</script>
+<script type="module">
+import { supabase } from "./auth/supabase.js"
+
+const newChatBtn = document.getElementById("newChatBtn")
+
+if (newChatBtn) {
+
+  newChatBtn.addEventListener("click", async () => {
+
+    // 1️⃣ Get logged in user
+    const { data } = await supabase.auth.getUser()
+
+    // 2️⃣ Create new chat session
+    const { data: session, error } = await supabase
+      .from("chat_sessions")
+      .insert([
+        {
+          user_id: data.user.id,
+          title: "New Chat"
+        }
+      ])
+      .select()
+      .single()
+
+    if (error) {
+      alert("Session create error")
+      return
+    }
+
+    // 3️⃣ Save active session id
+    localStorage.setItem("activeSession", session.id)
+
+    // 4️⃣ Clear chat UI
+    document.getElementById("chat-container").innerHTML = ""
+
+  })
+
+}
+</script>
+
+<script type="module">
+import { supabase } from "./auth/supabase.js"
+
+const chatContainer = document.getElementById("chat-container");
+const messageInput = document.getElementById("messageInput");
+const sendBtn = document.getElementById("sendBtn");
+
+/* ================= CREATE MESSAGE ================= */
+
+function createMessage(content, sender) {
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "w-full flex";
+
+    wrapper.classList.add(
+        sender === "user" ? "justify-end" : "justify-start"
+    );
+
+    const bubble = document.createElement("div");
+    bubble.className = `
+        max-w-[75%]
+        px-5 py-3
+        rounded-2xl
+        text-sm
+        shadow-lg
+    `;
+
+    if (sender === "user") {
+        bubble.classList.add(
+            "bg-gradient-to-r",
+            "from-[#ffa600]",
+            "to-[#ffcc66]",
+            "text-black",
+            "rounded-br-none"
+        );
+    } else {
+        bubble.classList.add(
+            "bg-[#2b1b12]",
+            "border",
+            "border-primary/20",
+            "text-slate-100",
+            "rounded-bl-none"
+        );
+    }
+
+    bubble.innerText = content;
+    wrapper.appendChild(bubble);
+    chatContainer.appendChild(wrapper);
+
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+/* ================= LOAD OLD MESSAGES ================= */
+async function loadOldMessages() {
+
+    const sessionId = localStorage.getItem("activeSession");
+
+    console.log("ACTIVE SESSION:", sessionId);
+
+    if (!sessionId) return;
+
+    const { data: messages, error } = await supabase
+        .from("chat_messages")
+        .select("*")
+        .eq("session_id", sessionId)
+        .order("created_at", { ascending: true });
+
+    if (error) {
+        console.log("Supabase error:", error);
+        return;
+    }
+
+    if (!messages || messages.length === 0) {
+        console.log("No messages found");
+        return;
+    }
+
+    chatContainer.innerHTML = "";
+
+    messages.forEach(msg => {
+        createMessage(msg.content, msg.role);
+    });
+} 
+
+/* ================= ENSURE SESSION ================= */
+
+async function ensureSession() {
+
+    let sessionId = localStorage.getItem("activeSession");
+    if (sessionId) return sessionId;
+
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) return null;
+
+    const { data: session } = await supabase
+        .from("chat_sessions")
+        .insert([
+            {
+                user_id: userData.user.id,
+                title: "New Chat"
+            }
+        ])
+        .select()
+        .single();
+
+    localStorage.setItem("activeSession", session.id);
+    return session.id;
+}
+
+/* ================= SEND MESSAGE ================= */
+
+async function handleSend() {
+
+    const message = messageInput.value.trim();
+    if (!message) return;
+
+    const sessionId = await ensureSession();
+    if (!sessionId) return;
+
+    createMessage(message, "user");
+    messageInput.value = "";
+    createMessage("Thinking...", "assistant");
+
+    try {
+
+        const { data: userData } = await supabase.auth.getUser();
+
+        const response = await fetch("http://192.168.31.207:5000/chat", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        message: message,
+        user_id: userData.user.id,
+        session_id: sessionId
+    })
+});
+
+        const result = await response.json();
+
+        chatContainer.lastChild.remove();
+        createMessage(result.reply || "No response", "assistant");
+
+    } catch (err) {
+
+        chatContainer.lastChild.remove();
+        createMessage("Server error.", "assistant");
+    }
+}
+
+/* ================= EVENTS ================= */
+
+sendBtn.addEventListener("click", handleSend);
+
+messageInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") handleSend();
+});
+
+/* ================= AUTO LOAD ================= */
+await loadOldMessages();
+</script>
+</body>
+</html>
